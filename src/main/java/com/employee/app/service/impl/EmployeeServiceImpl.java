@@ -50,7 +50,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public EmployeeDTO findByEmployeeId(long employeeId) {
 		log.info("Trying to get employee by employeeId: [{}]", employeeId);
-		Employee employee = employeeRepository.findById(employeeId);
+		Employee employee = employeeRepository.findById(employeeId)
+				.orElseThrow(() -> new EmployeeApiException(ErrorEmployeeApiMessage.INVALID_EMPLOYEE_ID));
 		return modelMapper.map(employee, EmployeeDTO.class);
 	}
 

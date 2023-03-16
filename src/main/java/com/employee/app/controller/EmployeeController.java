@@ -42,7 +42,7 @@ public class EmployeeController {
 	@GetMapping(value = "/{employeeId}")
 	@ResponseStatus(HttpStatus.OK)
 	public EmployeeDTO getEmplyeeByEmployeeId(@PathVariable(value = "employeeId") long employeeId) {
-		log.info("Inside get employee by Id endpoint!");
+		log.info("Inside get employee by Id endpoint!, employeeId:: {}", employeeId);
 		return employeeService.findByEmployeeId(employeeId);
 	}
 	
