@@ -1,19 +1,18 @@
 package com.employee.app.controller;
 
 
-import java.util.List;
-
+import com.employee.app.dto.EmployeeDTO;
+import com.employee.app.service.EmployeeService;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import com.employee.app.dto.EmployeeDTO;
-import com.employee.app.service.EmployeeService;
-
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -41,9 +40,9 @@ public class EmployeeController {
 
 	@GetMapping(value = "/{employeeId}")
 	@ResponseStatus(HttpStatus.OK)
-	public EmployeeDTO getEmplyeeByEmployeeId(@PathVariable(value = "employeeId") long employeeId) {
+	public EmployeeDTO getEmplyeeByEmployeeId(@PathVariable(value = "employeeId") UUID employeeId) {
 		log.info("Inside get employee by Id endpoint!, employeeId:: {}", employeeId);
-		return employeeService.findByEmployeeId(employeeId);
+		return employeeService.findByEmployeeId(101);
 	}
 	
 
