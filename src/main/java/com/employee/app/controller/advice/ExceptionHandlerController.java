@@ -27,7 +27,7 @@ public class ExceptionHandlerController {
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentTypeMismatchException exception, WebRequest request) {
-		log.info("GlobalExceptionHandler -> handleMethodArgumentNotValid method call");
+		log.info("GlobalExceptionHandler -> MethodArgumentTypeMismatchException method call");
 		GenericResponse body=new GenericResponse();
 		body.setStatus(Status.FAILURE);
 		body.setError(exception.getMessage());
