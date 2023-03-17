@@ -13,6 +13,6 @@ public class SprindDocConfiguration {
     @Bean
     public OpenAPI baseOpenAPI() {
 
-        return new OpenAPI().info(new Info().title("Employee Service").version("1.0.0").description("Employee Service is built in Spring Boot with CRUD APIs"));
+        return new OpenAPI().info(new Info().title("Employee Service").version("1.0.0").description("Employee Service is built in Spring Boot 3 with CRUD APIs"));
     }
 }
