@@ -3,6 +3,7 @@ package com.employee.app.controller.advice;
 import com.employee.app.dto.GenericResponse;
 import com.employee.app.dto.Status;
 import com.employee.app.exception.EmployeeApiException;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -41,6 +42,17 @@ public class ExceptionHandlerController {
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException exception, WebRequest request) {
 		log.info("GlobalExceptionHandler -> handleMethodArgumentTypeMismatch method call");
+		System.out.println(exception.getLocalizedMessage());
+		exception.printStackTrace();
+		GenericResponse body=new GenericResponse();
+		body.setStatus(Status.FAILURE);
+		body.setError(exception.getMessage());
+		return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(ConstraintViolationException.class)
+	protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException exception, WebRequest request) {
+		log.info("GlobalExceptionHandler -> handleConstraintViolation method call");
 		System.out.println(exception.getLocalizedMessage());
 		exception.printStackTrace();
 		GenericResponse body=new GenericResponse();
