@@ -1,5 +1,8 @@
 package com.employee.app.controller.advice;
 
+import com.employee.app.dto.GenericResponse;
+import com.employee.app.dto.Status;
+import com.employee.app.exception.EmployeeApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -10,12 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-
-import com.employee.app.dto.GenericResponse;
-import com.employee.app.dto.Status;
-import com.employee.app.exception.EmployeeApiException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,9 +23,26 @@ public class ExceptionHandlerController {
 
 	private static final Logger log = LoggerFactory.getLogger(ExceptionHandlerController.class);
 
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, WebRequest request) {
+		log.info("GlobalExceptionHandler -> handleMethodArgumentNotValid method call");
+		Map<String, String> errors = new HashMap<>();
+		exception.getBindingResult().getAllErrors().forEach((error) ->{
+			String fieldName = ((FieldError) error).getField();
+			String message = error.getDefaultMessage();
+			errors.put(fieldName, message);
+		});
+		GenericResponse body=new GenericResponse();
+		body.setStatus(Status.FAILURE);
+		body.setError(errors);;
+		return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+	}
+
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentTypeMismatchException exception, WebRequest request) {
-		log.info("GlobalExceptionHandler -> MethodArgumentTypeMismatchException method call");
+	protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException exception, WebRequest request) {
+		log.info("GlobalExceptionHandler -> handleMethodArgumentTypeMismatch method call");
+		System.out.println(exception.getLocalizedMessage());
+		exception.printStackTrace();
 		GenericResponse body=new GenericResponse();
 		body.setStatus(Status.FAILURE);
 		body.setError(exception.getMessage());

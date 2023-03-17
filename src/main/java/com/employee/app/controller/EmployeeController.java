@@ -2,6 +2,7 @@ package com.employee.app.controller;
 
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/employee")
-@Validated
 public class EmployeeController {
 
 	@Autowired
@@ -39,9 +39,9 @@ public class EmployeeController {
 		return new ResponseEntity<>(employeeList, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/{employeeId}")
+	@GetMapping(value = "/")
 	@ResponseStatus(HttpStatus.OK)
-	public EmployeeDTO getEmplyeeByEmployeeId(@PathVariable(value = "employeeId") long employeeId) {
+	public EmployeeDTO getEmplyeeByEmployeeId(@RequestParam(value = "employeeId") long employeeId) {
 		log.info("Inside get employee by Id endpoint!, employeeId:: {}", employeeId);
 		return employeeService.findByEmployeeId(employeeId);
 	}
