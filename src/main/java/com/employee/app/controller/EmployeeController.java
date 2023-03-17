@@ -1,22 +1,20 @@
 package com.employee.app.controller;
 
 
-import java.util.List;
-import java.util.UUID;
-
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import com.employee.app.dto.Create;
+import com.employee.app.dto.EmployeeDTO;
+import com.employee.app.dto.Update;
+import com.employee.app.service.EmployeeService;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import com.employee.app.dto.EmployeeDTO;
-import com.employee.app.service.EmployeeService;
-
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -29,9 +27,18 @@ public class EmployeeController {
 
 	@PostMapping(value = "/create", consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
+	@Validated(Create.class)
 	public EmployeeDTO createEmployee(@Valid @RequestBody EmployeeDTO employeeDto) {
 		log.info("Inside create employee endpoint!");
 		return employeeService.createEmployee(employeeDto);
+	}
+
+	@PutMapping(value = "/update", consumes = "application/json")
+	@ResponseStatus(HttpStatus.OK)
+	@Validated(Update.class)
+	public EmployeeDTO updateEmployee(@Valid @RequestBody EmployeeDTO employeeDto) {
+		log.info("Inside update employee endpoint!");
+		return employeeService.updateEmployee(employeeDto);
 	}
 	
 	@GetMapping("/list")
@@ -44,16 +51,9 @@ public class EmployeeController {
 
 	@GetMapping(value = "/")
 	@ResponseStatus(HttpStatus.OK)
-	public EmployeeDTO getEmplyeeByEmployeeId(@Size(min = 2, max = 6, message = "Invalid employeeId!") @RequestParam(value = "employeeId") String employeeId) {
-		log.info("Inside get employee by Id endpoint!, employeeId length:: {}", employeeId != null ? employeeId.length() : 0);
-		return employeeService.findByEmployeeId(101);
-	}
-
-	@PutMapping(value = "/update", consumes = "application/json")
-	@ResponseStatus(HttpStatus.OK)
-	public EmployeeDTO updateEmployee(@Valid @RequestBody EmployeeDTO employeeDto) {
-		log.info("Inside update employee endpoint!");
-		return employeeService.updateEmployee(employeeDto);
+	public EmployeeDTO getEmplyeeByEmployeeId(@RequestParam(value = "employeeId") long employeeId) {
+		log.info("Inside get employee by Id endpoint!, employeeId:: {}", employeeId);
+		return employeeService.findByEmployeeId(employeeId);
 	}
 	
 	@DeleteMapping(value = "/delete")

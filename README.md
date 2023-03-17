@@ -4,7 +4,7 @@
 
 ## Spring boot application that covers the following:
 - CRUD API
-- Validation
+- Validation [Special case- @Validated for constraint annotations on method parameters and path variables validation]
 - Exception Handleing
 - Lombok Configuration
 
