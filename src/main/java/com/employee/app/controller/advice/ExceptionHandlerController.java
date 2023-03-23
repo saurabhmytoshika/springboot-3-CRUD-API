@@ -41,9 +41,7 @@ public class ExceptionHandlerController {
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	protected ResponseEntity<Object> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException exception, WebRequest request) {
-		log.info("GlobalExceptionHandler -> handleMethodArgumentTypeMismatch method call");
-		System.out.println(exception.getLocalizedMessage());
-		exception.printStackTrace();
+		log.error("GlobalExceptionHandler -> handleMethodArgumentTypeMismatch method call, ex:: {}", exception);
 		GenericResponse body=new GenericResponse();
 		body.setStatus(Status.FAILURE);
 		body.setError(exception.getMessage());
@@ -52,9 +50,7 @@ public class ExceptionHandlerController {
 
 	@ExceptionHandler(ConstraintViolationException.class)
 	protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException exception, WebRequest request) {
-		log.info("GlobalExceptionHandler -> handleConstraintViolation method call");
-		System.out.println(exception.getLocalizedMessage());
-		exception.printStackTrace();
+		log.error("GlobalExceptionHandler -> handleConstraintViolation method call, ex:: {}", exception);
 		GenericResponse body=new GenericResponse();
 		body.setStatus(Status.FAILURE);
 		body.setError(exception.getMessage());
@@ -68,6 +64,15 @@ public class ExceptionHandlerController {
 		body.setStatus(Status.FAILURE);
 		body.setError(exception.getEmployeeApiMessage());
 		return new ResponseEntity<Object>(body, new HttpHeaders(), HttpStatus.PRECONDITION_FAILED);
+	}
+
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<Object> handleOtherException(Exception exception, WebRequest request) {
+		log.error("GenericExceptionHandler -> handleOtherException method call, ex:: {}", exception);
+		GenericResponse body = new GenericResponse();
+		body.setStatus(Status.FAILURE);
+		body.setError(exception.getMessage());
+		return new ResponseEntity<Object>(body, new HttpHeaders(), HttpStatus.BAD_REQUEST);
 	}
 
 }

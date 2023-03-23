@@ -3,27 +3,37 @@ package com.employee.app.controller;
 
 import com.employee.app.dto.Create;
 import com.employee.app.dto.EmployeeDTO;
+import com.employee.app.dto.EmployeeDtoWrapper;
 import com.employee.app.dto.Update;
 import com.employee.app.service.EmployeeService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @RestController
 @RequestMapping("/employee")
 @Validated
+@AllArgsConstructor
 public class EmployeeController {
 
-	@Autowired
 	private EmployeeService employeeService;
+
+	//Apply validation on list of object using @JsonCreator & @JsonValue
+	@PostMapping(value = "/create/bulk", consumes = "application/json")
+	@ResponseStatus(HttpStatus.CREATED)
+	@Validated(Create.class)
+	public ResponseEntity<String> createBulkEmployee(@Valid @RequestBody EmployeeDtoWrapper employeeDtoWrapper) {
+		log.info("Inside create bulk employee endpoint!");
+		employeeDtoWrapper.getBulks().forEach(emp -> employeeService.createEmployee(emp));
+		return ResponseEntity.ok().body("Created");
+	}
 
 	@PostMapping(value = "/create", consumes = "application/json")
 	@ResponseStatus(HttpStatus.CREATED)
